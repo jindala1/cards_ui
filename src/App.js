@@ -1,17 +1,16 @@
 import Header from './Header';
-import SearchItem from './SearchItem';
-import AddItem from './AddItem';
+import listCards from './listCards';
+import AddCard from './AddCard';
 import Content from './Content';
 import Footer from './Footer';
 import { useState, useEffect } from 'react';
 import apiRequest from './apiRequest';
 
 function App() {
-  const API_URL = 'http://localhost:3500/items';
+  const API_URL = 'http://localhost:8080/v1/api/';
 
-  const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState('');
-  const [search, setSearch] = useState('');
+  const [card, addcard] = useState([]);
+  const [list, listCards] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -35,7 +34,7 @@ function App() {
 
   }, [])
 
-  const addItem = async (item) => {
+  const addCard = async (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
@@ -69,16 +68,6 @@ function App() {
     if (result) setFetchError(result);
   }
 
-  const handleDelete = async (id) => {
-    const listItems = items.filter((item) => item.id !== id);
-    setItems(listItems);
-
-    const deleteOptions = { method: 'DELETE' };
-    const reqUrl = `${API_URL}/${id}`;
-    const result = await apiRequest(reqUrl, deleteOptions);
-    if (result) setFetchError(result);
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!newItem) return;
@@ -88,7 +77,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header title="Grocery List" />
+      <Header title="Cards List" />
       <AddItem
         newItem={newItem}
         setNewItem={setNewItem}
